@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>進路お悩みMBTI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,sans-serif;background:#070b1a;color:#fff;overflow:hidden}#bg{position:fixed;inset:0}#app{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.card{width:min(1100px,95vw);background:rgba(10,15,35,.7);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:32px;padding:32px}.title{font-size:54px;font-weight:800;background:linear-gradient(90deg,#59f,#b6f);-webkit-background-clip:text;color:transparent}.q{font-size:32px;margin:20px 0}.opt{padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.15);margin:12px 0;cursor:pointer}.opt:hover,.sel{background:linear-gradient(90deg,#1cb5e055,#8e44ad55)}.result{font-size:48px;font-weight:700}.btn{padding:12px 18px;margin:6px;border:none;border-radius:12px;background:linear-gradient(90deg,#36d1dc,#5b86e5);color:#fff;cursor:pointer}.badge{display:inline-block;padding:8px 12px;border-radius:20px;background:#19d3ff;color:#001;font-weight:700}
+</style></head><body><canvas id="bg"></canvas><div id="app"><div class="card"><div class="title">進路お悩みMBTI</div><div id="content"></div></div></div><script>
+const c=bg,x=c.getContext('2d');function rs(){c.width=innerWidth;c.height=innerHeight}rs();onresize=rs;const p=[...Array(180)].map(()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2+1,v:Math.random()+.3}));(function a(){x.fillStyle='#070b1a';x.fillRect(0,0,c.width,c.height);for(const s of p){s.y-=s.v;if(s.y<0)s.y=c.height;x.fillStyle='rgba(100,220,255,.8)';x.beginPath();x.arc(s.x,s.y,s.r,0,7);x.fill()}requestAnimationFrame(a)})();
+const qs=[{q:'進路について今の気持ちは？',o:['目標が明確','やりたい事が多い','これから探したい','現実的な条件重視'],m:['p','c','e','n']},{q:'イベント参加するなら？',o:['一人','友達と','保護者と'],m:['solo','friend','family']},{q:'学校選びで重視するのは？',o:['夢への近道','幅広い学び','楽しさ','就職実績'],m:['p','c','e','n']},{q:'体験授業なら？',o:['プロ体験','複数体験','初心者歓迎','相談会'],m:['p','c','e','n']}];
+const res={p:['🚀 ドリーム・パイオニア','目指す未来へ最短ルートで突き進む挑戦者','スーパーCGクリエイター専攻 / スーパーVTuber専攻'],c:['🎨 ビジョン・クリエイター','可能性にあふれるマルチな才能の持ち主','スーパーデジタルメディア専攻 / スーパーコミックイラスト専攻'],e:['🌎 フューチャー・エクスプローラー','自分の魅力を発見する冒険家','CGクリエイター専攻 / アニメーション専攻'],n:['🧭 リアル・ナビゲーター','納得感を大切にする未来設計者','学費説明会・保護者相談']};
+let i=0,sel=0;const sc={p:0,c:0,e:0,n:0,solo:0,friend:0,family:0};const el=content;
+function draw(){if(i>=qs.length)return show();let q=qs[i];el.innerHTML='<div class=q>'+q.q+'</div>'+q.o.map((v,n)=>`<div class="opt ${sel===n?'sel':''}" onclick="pick(${n})">${v}</div>`).join('')+'<p>← → Enter 操作可</p>'}
+function pick(n){sel=n;next()} window.pick=pick;
+function next(){sc[qs[i].m[sel]]++;i++;sel=0;draw()}
+document.addEventListener('keydown',e=>{if(i>=qs.length)return;if(e.key==='ArrowLeft'){sel=Math.max(0,sel-1);draw()}if(e.key==='ArrowRight'){sel=Math.min(qs[i].o.length-1,sel+1);draw()}if(e.key==='Enter')next()});
+function show(){let t='p',m=-1;['p','c','e','n'].forEach(k=>{if(sc[k]>m){m=sc[k];t=k}});let a='solo';m=-1;['solo','friend','family'].forEach(k=>{if(sc[k]>m){m=sc[k];a=k}});const r=res[t];window.r=r;el.innerHTML=`<div class=result>${r[0]}</div><p>${r[1]}</p><div class=badge>${a.toUpperCase()}</div><h3>おすすめ専攻</h3><p>${r[2]}</p><button class=btn onclick="saveCard()">📸 SNSカード保存</button><button class=btn onclick="shareX()">𝕏 シェア</button><button class=btn onclick="location.reload()">再診断</button>`}
+window.saveCard=()=>{let cv=document.createElement('canvas');cv.width=1080;cv.height=1350;let g=cv.getContext('2d');let gr=g.createLinearGradient(0,0,1080,1350);gr.addColorStop(0,'#36d1dc');gr.addColorStop(1,'#5b86e5');g.fillStyle=gr;g.fillRect(0,0,1080,1350);g.fillStyle='#fff';g.font='bold 64px sans-serif';g.fillText('進路お悩みMBTI',70,120);g.font='bold 90px sans-serif';g.fillText(r[0],70,350);g.font='40px sans-serif';g.fillText(r[1],70,460);g.fillText('#進路お悩みMBTI',70,1180);let a=document.createElement('a');a.href=cv.toDataURL();a.download='mbti_card.png';a.click()};
+window.shareX=()=>open('https://x.com/intent/tweet?text='+encodeURIComponent('私の結果は '+r[0]+'！ #進路お悩みMBTI'));
+draw();setTimeout(()=>{let d=setInterval(()=>{if(i>=qs.length){clearInterval(d);return;}sel=Math.floor(Math.random()*qs[i].o.length);next()},1200)},1800);
+</script></body></html>
